@@ -1,6 +1,8 @@
 package Persistence.PlaceHolderDAO;
 
-public interface IPlaceHolderDAO {
+import Util.PropertyChangeSubject;
+
+public interface IPlaceHolderDAO extends PropertyChangeSubject {
 
     String getResult(String message);
 }
