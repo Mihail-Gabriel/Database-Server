@@ -11,6 +11,7 @@ public class User implements Serializable {
     private String password;
     private String address;
     private String telephoneNo;
+    private String city;
 
     public String getUsername() {
         return username;
@@ -42,5 +43,13 @@ public class User implements Serializable {
 
     public void setTelephoneNo(String telephoneNo) {
         this.telephoneNo = telephoneNo;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 }
