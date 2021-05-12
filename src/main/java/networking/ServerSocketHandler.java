@@ -8,8 +8,6 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.sql.SQLOutput;
 
-import static Util.EventType.PLACEHOLDER_REQUEST;
-
 public class ServerSocketHandler implements Runnable {
     private Socket socket;
     private ObjectOutputStream outToClient;
