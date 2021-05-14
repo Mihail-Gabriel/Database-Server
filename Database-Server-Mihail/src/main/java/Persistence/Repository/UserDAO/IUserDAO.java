@@ -1,8 +1,8 @@
 package Persistence.Repository.UserDAO;
 
-import Models.User;
+import Models.Users;
 
 public interface IUserDAO {
-    void RegisterUserAsync(User user);
-    User ValidateUserAsync(String username, String password);
+    void RegisterUserAsync(Users users);
+    Users ValidateUserAsync(String username, String password);
 }

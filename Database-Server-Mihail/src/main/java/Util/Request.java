@@ -3,13 +3,14 @@ package Util;
 import com.fasterxml.jackson.annotation.*;
 
 import java.io.Serializable;
+
 @JsonRootName(value="request")
 public class Request implements Serializable {
     @JsonProperty("eventType")
     private EventType type;
+
     @JsonProperty("object")
     private Object arg;
-
 
     @JsonCreator
     public Request(@JsonProperty("eventType") EventType type,@JsonProperty("object") Object arg)
