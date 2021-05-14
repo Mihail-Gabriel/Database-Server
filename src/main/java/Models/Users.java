@@ -2,10 +2,11 @@ package Models;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 
 @Entity
-public class User implements Serializable {
+public class Users implements Serializable {
     @Id
     private String username;
     private String password;
@@ -13,6 +14,21 @@ public class User implements Serializable {
     private String telephoneNo;
     private String city;
     private String role;
+
+
+    public Users(String username, String password, String address, String telephoneNo, String city, String role) {
+        this.username = username;
+        this.password = password;
+        this.address = address;
+        this.telephoneNo = telephoneNo;
+        this.city = city;
+        this.role = role;
+    }
+
+    public Users() {
+
+    }
+
 
     public String getRole() {
         return role;
@@ -22,6 +38,7 @@ public class User implements Serializable {
         this.role = role;
     }
 
+    @Id
     public String getUsername() {
         return username;
     }

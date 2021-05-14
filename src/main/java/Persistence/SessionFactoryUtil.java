@@ -1,5 +1,6 @@
 package Persistence;
 
+import Models.Users;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
@@ -20,6 +21,7 @@ public class SessionFactoryUtil {
     {
         Configuration configObj = new Configuration();
         configObj.configure("hibernate.cfg.xml");
+        configObj.addAnnotatedClass(Users.class);
         ServiceRegistry serviceRegistryObj = new StandardServiceRegistryBuilder().applySettings(configObj.getProperties()).build();
         return configObj.buildSessionFactory(serviceRegistryObj);
     }
