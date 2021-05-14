@@ -1,24 +1,24 @@
 package networking;
 
 import Util.Request;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
 import java.sql.SQLOutput;
 
 public class ServerSocketHandler implements Runnable {
     private Socket socket;
-    private ObjectOutputStream outToClient;
-    private ObjectInputStream inFromClient;
-    //Future implementation of the model aka the DAO to send stuff into the database
-    public ServerSocketHandler(Socket socket)
-    {
+    private OutputStream outToClient;
+    private InputStream inFromClient;
+    private String jsonResponse;     //Future implementation of the model aka the DAO to send stuff into the database
+
+    public ServerSocketHandler(Socket socket) {
+        String jsonResponse = new String();
         this.socket = socket;
-        try{
-            outToClient = new ObjectOutputStream(socket.getOutputStream());
-            inFromClient = new ObjectInputStream(socket.getInputStream());
+        try {
+            outToClient = socket.getOutputStream();
+            inFromClient = socket.getInputStream();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -26,19 +26,37 @@ public class ServerSocketHandler implements Runnable {
 
     @Override
     public void run() {
-        try{
-            while(true)
-            {
-                Request request = (Request) inFromClient.readObject();
+        try {
+            while (true) {
+                byte[] jsonByte = new byte[256];
+                int bytesRead;
+                do {
+                    bytesRead = inFromClient.read(jsonByte);
+                    System.out.println(bytesRead);
+                    jsonResponse = new String(jsonByte, 0, bytesRead);
+                    System.out.println(jsonResponse);
+                }
+                while (inFromClient.available() > 0);
+
+                Request request;
+
+                ObjectMapper objectMapper = new ObjectMapper();
+                request = objectMapper.readValue(jsonResponse, Request.class);
+
                 System.out.println(request.getEventType().toString());
-                switch (request.getEventType())
-                {
+                switch (request.getEventType()) {
                     case PLACEHOLDER_REQUEST:
+                        String jsonResponse = "jdlkajhsdahs";
+
+                        outToClient.write(jsonResponse.getBytes());
+                        System.out.println("Sent to java server --> " + jsonResponse.toString());
+
                 }
 
             }
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 }
+
