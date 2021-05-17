@@ -1,0 +1,7 @@
+package Util;
+
+public enum EventType {
+    PLACEHOLDER_REQUEST,
+    PLACEHOLDER_REQUEST_REGISTER_USER,
+    PLACEHOLDER_REQUEST_LOGIN_USER;
+}
