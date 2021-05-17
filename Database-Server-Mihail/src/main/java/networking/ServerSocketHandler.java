@@ -9,6 +9,7 @@ import com.google.gson.stream.JsonReader;
 
 import java.io.*;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLOutput;
 
 public class ServerSocketHandler implements Runnable {
@@ -42,12 +43,21 @@ public class ServerSocketHandler implements Runnable {
                 }
                 while (inFromClient.available() > 0);
 
+
                 Request request;
+                System.out.println("json response ...."+jsonResponse);
+
 
                 ObjectMapper objectMapper = new ObjectMapper();
                 request = objectMapper.readValue(jsonResponse, Request.class);
 
-                System.out.println(request.getEventType().toString());
+
+                UserDAOImpl userDAO = new UserDAOImpl();
+
+                Gson gson = new Gson();
+                String objJson= gson.toJson(request.getObject());
+                Users userJs = gson.fromJson(objJson,Users.class);
+
                 switch (request.getEventType()) {
                     case PLACEHOLDER_REQUEST:
                         String jsonResponse = "Message passing test";
@@ -56,15 +66,12 @@ public class ServerSocketHandler implements Runnable {
                         System.out.println("Sent to java server --> " + jsonResponse.toString());
                         break;
                     case PLACEHOLDER_REQUEST_REGISTER_USER:
-                        UserDAOImpl userDAO = new UserDAOImpl();
-
-                        System.out.println(request.getObject().toString());
-
-                        Object obj = request.getObject();
-
-                        System.out.println(obj.toString());
-
-                        //userDAO.RegisterUserAsync(user);
+                        userDAO.RegisterUserAsync(userJs);
+                        break;
+                    case PLACEHOLDER_REQUEST_LOGIN_USER:
+                        Users user = userDAO.ValidateUserAsync(userJs.getUsername(), userJs.getPassword());
+                        outToClient.write(gson.toJson(user).getBytes());
+                        break;
 
                 }
 

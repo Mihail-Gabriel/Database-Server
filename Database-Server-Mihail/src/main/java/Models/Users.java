@@ -1,5 +1,6 @@
 package Models;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -13,7 +14,7 @@ public class Users implements Serializable {
     private String address;
     private String telephoneNo;
     private String city;
-    private String role;
+    private String securityLevel;
 
 
     public Users(String username, String password, String address, String telephoneNo, String city, String role) {
@@ -22,7 +23,7 @@ public class Users implements Serializable {
         this.address = address;
         this.telephoneNo = telephoneNo;
         this.city = city;
-        this.role = role;
+        this.securityLevel = role;
     }
 
     public Users() {
@@ -30,12 +31,12 @@ public class Users implements Serializable {
     }
 
 
-    public String getRole() {
-        return role;
+    public String getSecurityLevel() {
+        return securityLevel;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setSecurityLevel(String role) {
+        this.securityLevel = securityLevel;
     }
 
     @Id
