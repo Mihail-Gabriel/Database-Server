@@ -10,6 +10,7 @@ import com.google.gson.stream.JsonReader;
 import java.io.*;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.sql.Array;
 import java.sql.SQLOutput;
 
 public class ServerSocketHandler implements Runnable {
@@ -56,7 +57,7 @@ public class ServerSocketHandler implements Runnable {
 
                 Gson gson = new Gson();
                 String objJson= gson.toJson(request.getObject());
-                Users userJs = gson.fromJson(objJson,Users.class);
+
 
                 switch (request.getEventType()) {
                     case PLACEHOLDER_REQUEST:
@@ -66,11 +67,18 @@ public class ServerSocketHandler implements Runnable {
                         System.out.println("Sent to java server --> " + jsonResponse.toString());
                         break;
                     case PLACEHOLDER_REQUEST_REGISTER_USER:
+                        Users userJs = gson.fromJson(objJson,Users.class);
                         userDAO.RegisterUserAsync(userJs);
                         break;
                     case PLACEHOLDER_REQUEST_LOGIN_USER:
-                        Users user = userDAO.ValidateUserAsync(userJs.getUsername(), userJs.getPassword());
-                        outToClient.write(gson.toJson(user).getBytes());
+                        String sLogin = request.getObject().toString();
+                        System.out.println(sLogin);
+                        String[] userPass = sLogin.split(" ");
+
+                        Users userLoggedin = userDAO.ValidateUserAsync(userPass[1],userPass[3]);
+                        outToClient.write(gson.toJson(userLoggedin).getBytes());
+                        System.out.println(userLoggedin.getUsername().toString());
+                        System.out.println("www");
                         break;
 
                 }
