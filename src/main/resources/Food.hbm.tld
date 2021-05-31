@@ -1,0 +1,18 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name = "Models.Food" table = "FOODS">
+        <meta attribute="class-description">
+            This class contains the branches of the restaurant
+        </meta>
+        <id name="foodName" type="string" column="food_name">
+        </id>
+        <many-to-one name="branch" class="Models.Branch" fetch="select">
+            <column name="branch_id" not-null="true"/>
+        </many-to-one>
+        <property name="foodPrice" column="foodprice" type="double"/>
+    </class>
+</hibernate-mapping>

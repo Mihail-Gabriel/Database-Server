@@ -5,10 +5,10 @@ import Persistence.Repository.UserDAO.IUserDAO;
 import Persistence.SessionFactoryUtil;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
 
 
@@ -17,57 +17,133 @@ public class UserDAOImpl implements IUserDAO {
     private Session session;
 
 
+    public UserDAOImpl()
+    {
+    }
+
     @Override
-    public void RegisterUserAsync(Users users) {
-        Thread newThread = new Thread(() -> {
-            SessionFactory sessionFactory = SessionFactoryUtil.getInstance().getHibernateSessionFactory();
+    public String RegisterUserAsync(Users users) throws ExecutionException, InterruptedException {
+        CompletableFuture<Object> response = new CompletableFuture<>();
             session = SessionFactoryUtil.getInstance().getHibernateSessionFactory().openSession();
             Transaction tx = null;
             try{
                 tx = session.beginTransaction();
                 session.save(users);
                 tx.commit();
+                response = CompletableFuture.supplyAsync(() -> "Success");
+
             } catch (HibernateException e) {
                 if (tx != null) {
                     tx.rollback();
                 }
-
+                response = CompletableFuture.supplyAsync(() -> "Failure");
+                System.out.println(response.get());
                 Logger.getLogger("con").info("Exception" + e.getMessage());
                 e.printStackTrace(System.err);
+                return (String) response.get();
             }
             finally
             {
+                while(response.isDone())
+                {
+
+                }
+                System.out.println(response.get());
                 session.close();
             }
-        });
-        newThread.start();
-
+        return (String) response.get();
     }
 
     @Override
-    public Users ValidateUserAsync(String username, String password) {
-        AtomicReference<Users> user = new AtomicReference<>();
-        Thread newThread = new Thread(() ->{
+    public Object ValidateUserAsync(String username, String password) throws ExecutionException, InterruptedException {
             session = SessionFactoryUtil.getInstance().getHibernateSessionFactory().openSession();
+            CompletableFuture<Object> response = new CompletableFuture<>();
             Transaction tx = null;
             try{
                 tx= session.beginTransaction();
                 String queryString = "FROM Users U Where U.username= username and U.password = password ";
-                user.set((Users) session.createQuery(queryString).getSingleResult());
+                response = CompletableFuture.supplyAsync(() -> session.createQuery(queryString).getSingleResult());
             } catch (HibernateException e) {
                 if (tx != null) {
                     tx.rollback();
-                }
 
+                }
+                response = CompletableFuture.supplyAsync(() ->"Failure");
                 Logger.getLogger("con").info("Exception" + e.getMessage());
                 e.printStackTrace(System.err);
+                return response.get();
             }
             finally
             {
+                while(!response.isDone())
+                {
+
+                }
+                System.out.println(response.get());
                 session.close();
             }
-        });
-        newThread.start();
-        return user.get();
+        return response.get();
+    }
+
+    @Override
+    public String DeleteUserAsync(Users users) throws ExecutionException, InterruptedException {
+        session = SessionFactoryUtil.getInstance().getHibernateSessionFactory().openSession();
+        CompletableFuture<String> response = new CompletableFuture<>();
+        Transaction tx = null;
+        try{
+            tx= session.beginTransaction();
+            session.delete(users);
+            tx.commit();
+        } catch (HibernateException e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            response = CompletableFuture.supplyAsync(() ->"Failure");
+            Logger.getLogger("con").info("Exception" + e.getMessage());
+            e.printStackTrace(System.err);
+            return response.get();
+        }
+        finally
+        {
+            while(!response.isDone())
+            {
+
+            }
+            System.out.println(response.get());
+            session.close();
+        }
+        return "Success";
+    }
+
+    @Override
+    public Object UpdateUserAsync(Users users, Users oldUser) throws ExecutionException, InterruptedException {
+        session = SessionFactoryUtil.getInstance().getHibernateSessionFactory().openSession();
+        CompletableFuture<Object> response = new CompletableFuture<>();
+        Transaction tx = null;
+        try{
+            tx = session.beginTransaction();
+            session.save(users);
+            session.delete(oldUser);
+            response = CompletableFuture.supplyAsync(() -> users);
+            tx.commit();
+        } catch (HibernateException e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            response = CompletableFuture.supplyAsync(() ->"Failure");
+            Logger.getLogger("con").info("Exception" + e.getMessage());
+            e.printStackTrace(System.err);
+            return response.get();
+        }
+        finally
+        {
+            while(!response.isDone())
+            {
+
+            }
+            System.out.println(response.get());
+            session.close();
+        }
+        return response;
     }
 }

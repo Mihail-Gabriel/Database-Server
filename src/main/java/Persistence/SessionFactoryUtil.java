@@ -1,6 +1,5 @@
 package Persistence;
 
-import Models.Users;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
@@ -21,7 +20,11 @@ public class SessionFactoryUtil {
     {
         Configuration configObj = new Configuration();
         configObj.configure("hibernate.cfg.xml");
-        configObj.addAnnotatedClass(Users.class);
+        configObj.addResource("Users.hbm.tld");
+        configObj.addResource("Branch.hbm.tld");
+        configObj.addResource("Food.hbm.tld");
+        configObj.addResource("Order.hbm.tld");
+        configObj.addResource("OrderFood.hbm.tld");
         ServiceRegistry serviceRegistryObj = new StandardServiceRegistryBuilder().applySettings(configObj.getProperties()).build();
         return configObj.buildSessionFactory(serviceRegistryObj);
     }
