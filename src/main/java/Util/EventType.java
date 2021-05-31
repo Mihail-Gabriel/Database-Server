@@ -1,0 +1,11 @@
+package Util;
+
+public enum EventType {
+    PLACEHOLDER_REQUEST,
+    REGISTER_REQUEST,
+    LOGIN_REQUEST,
+    BRANCH_CREATE_REQUEST,
+    BRANCH_GET_REQUEST,
+    MENU_CREATE_REQUEST
+    ;
+}

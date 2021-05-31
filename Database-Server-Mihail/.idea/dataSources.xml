@@ -1,22 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="Database" uuid="8f63232d-1bfa-43ef-a765-8952b5690ac8">
+    <data-source source="LOCAL" name="pibuxzdl" uuid="6991f998-fd8e-47e6-8da6-1cfd7ecfdd6c">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
       <jdbc-url>jdbc:postgresql://dumbo.db.elephantsql.com:5432/pibuxzdl</jdbc-url>
-    </data-source>
-    <data-source source="LOCAL" name="hibernate.cfg.xml/Hibernate" uuid="ca3d8ffc-39a5-42ee-9171-c94d57f45bc6">
-      <driver-ref>postgresql</driver-ref>
-      <synchronize>true</synchronize>
-      <imported>true</imported>
-      <remarks>Hibernate
-
-C:/Users/Flavius-Alin/Desktop/Git OWN branches/Database-Server/Database-Server-Mihail/src/main/resources/hibernate.cfg.xml</remarks>
-      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
-      <jdbc-url>jdbc:postgresql://dumbo.db.elephantsql.com:5432/pibuxzdl</jdbc-url>
-      <working-dir>$ProjectFileDir$</working-dir>
+      <driver-properties>
+        <property name="sslmode" value="disable" />
+        <property name="ApplicationName" value="pibuxzdl" />
+      </driver-properties>
     </data-source>
   </component>
 </project>

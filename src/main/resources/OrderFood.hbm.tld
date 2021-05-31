@@ -1,0 +1,18 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name = "Models.OrderFood" table = "ORDERFOOD">
+        <meta attribute="class-description">
+            This class contains the meals of the order of the restaurant
+        </meta>
+        <id name="foodName" type="string" column="food_name">
+        </id>
+        <many-to-one name="orders" class="Models.Orders" fetch="select">
+            <column name="user_name" not-null="true"/>
+        </many-to-one>
+        <property name="foodPrice" column="food_price" type="double"/>
+    </class>
+</hibernate-mapping>
