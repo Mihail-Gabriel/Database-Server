@@ -1,6 +1,7 @@
 package Persistence.Repository.BranchDAO.Implementation;
 
 import Models.Branch;
+import Models.Food;
 import Persistence.Repository.BranchDAO.IBranchDAO;
 import Persistence.SessionFactoryUtil;
 import org.hibernate.HibernateException;
@@ -8,8 +9,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import javax.persistence.Query;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
@@ -25,8 +25,8 @@ public class BranchDAOImpl implements IBranchDAO {
         Transaction tx = null;
         try{
             tx = session.beginTransaction();
+            System.out.println("before save");
             session.save(branch);
-            session.save(branch.getFoodSet());
             tx.commit();
             response = CompletableFuture.supplyAsync(() -> "Success");
         }
@@ -58,8 +58,10 @@ public class BranchDAOImpl implements IBranchDAO {
         Transaction tx = null;
         try{
             tx = session.beginTransaction();
-            String sqlQuery = "FROM Branch U WHERE U.branchId = id";
-            response = CompletableFuture.supplyAsync(() ->session.createQuery(sqlQuery).getSingleResult());
+            String sqlQuery = "FROM Branch U WHERE U.branchId = :ids";
+            Query q = session.createQuery(sqlQuery);
+            q.setParameter("ids",id);
+            response = CompletableFuture.supplyAsync(q::getSingleResult);
         }
         catch (HibernateException e) {
             if (tx != null) {
@@ -115,9 +117,14 @@ public class BranchDAOImpl implements IBranchDAO {
         Transaction tx = null;
         try{
             tx = session.beginTransaction();
-            String queryString = "From Branch U Where U.branchId = id";
             Branch branch = new Branch();
-            branch = (Branch) session.createQuery(queryString).getSingleResult();
+            String sqlQuery = "FROM Branch U WHERE U.branchId = :ids ";
+            System.out.println("Before querry");
+            Query q = session.createQuery(sqlQuery);
+            System.out.println("After query");
+            q.setParameter("ids",id);
+            branch = (Branch) q.getSingleResult();
+            System.out.println(branch);
             session.delete(branch);
             response = CompletableFuture.supplyAsync(() ->"Success");
             tx.commit();

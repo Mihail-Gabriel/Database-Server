@@ -1,17 +1,22 @@
 package Models;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
-
+@Entity
+@Table(name="BRANCH")
 public class Branch implements Serializable {
+    @Id
+    @Column(name ="branch_id")
     private int branchId;
+    @Column(name ="branch_theme")
     private String theme;
+    @Column (name = "branch_name")
     private String branchName;
+    @Column(name ="city_name")
     private String city;
-    private Set<Food> foodSet = new HashSet<Food>();
 
     public String getBranchName() {
         return branchName;
@@ -45,11 +50,4 @@ public class Branch implements Serializable {
         this.theme = theme;
     }
 
-    public Set<Food> getFoodSet() {
-        return foodSet;
-    }
-
-    public void setFoodSet(Set<Food> foodSet) {
-        this.foodSet = foodSet;
-    }
 }

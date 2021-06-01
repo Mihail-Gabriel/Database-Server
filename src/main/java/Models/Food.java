@@ -1,15 +1,20 @@
 package Models;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-
+@Entity
+@Table(name = "foods")
 public class Food implements Serializable {
+    @Id
+    @Column(name = "food_name")
     private String foodName;
+    @Column(name = "foodprice")
     private double foodPrice;
+    @ManyToOne(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "branch_id", nullable = false)
     private Branch branch;
 
     public String getFoodName() {
