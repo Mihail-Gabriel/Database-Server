@@ -1,14 +1,26 @@
 package Models;
 
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
-
+@Entity
+@Table(name ="Users")
 public class Users implements Serializable {
+    @Id
+    @Column(name ="username")
     private String username;
+    @Column(name ="password")
     private String password;
+    @Column(name = "address")
     private String address;
+    @Column(name = "telephoneno")
     private String telephoneNo;
+    @Column(name = "city")
     private String city;
+    @Column(name = "securitylevel")
     private String role;
 
     public Users() {

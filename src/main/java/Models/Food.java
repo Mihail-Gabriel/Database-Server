@@ -1,5 +1,6 @@
 package Models;
 
+import javax.persistence.*;
 import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.Entity;
@@ -8,12 +9,19 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+@Entity
+@Table(name = "foods")
 @JsonRootName(value="food")
 public class Food implements Serializable {
+    @Id
+    @Column(name = "food_name")
     @JsonProperty("foodName")
     private String foodName;
+    @Column(name = "foodprice")
     @JsonProperty("foodPrice")
     private double foodPrice;
+    @ManyToOne(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "branch_id", nullable = false)
     @JsonProperty("branch")
     private Branch branch;
     @JsonCreator

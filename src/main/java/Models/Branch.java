@@ -3,17 +3,28 @@ package Models;
 
 import com.fasterxml.jackson.annotation.*;
 
+import javax.persistence.*;
 import java.io.Serializable;
 
 @JsonRootName(value="branch")
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+@Entity
+@Table(name="BRANCH")
 public class Branch implements Serializable {
     @JsonProperty("branchId")
+    @Id
+    @Column(name ="branch_id")
     private int branchId;
     @JsonProperty("theme")
+    @Column(name ="branch_theme")
     private String theme;
     @JsonProperty("branchName")
+    @Column (name = "branch_name")
     private String branchName;
     @JsonProperty("city")
+    @Column(name ="city_name")
     private String city;
 
 
