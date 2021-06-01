@@ -15,34 +15,30 @@ import java.util.logging.Logger;
 
 public class FoodDAOImpl implements IFoodDAO {
     private Session session;
+
     @Override
     public String AddFoodAsync(List<Food> foods) throws ExecutionException, InterruptedException {
         session = SessionFactoryUtil.getInstance().getHibernateSessionFactory().openSession();
         CompletableFuture<String> response = new CompletableFuture<>();
         Transaction tx = null;
-        try{
+        try {
             tx = session.beginTransaction();
             System.out.println("before save");
-            for (Food f: foods)
-            {
+            for (Food f : foods) {
                 session.save(f);
             }
             tx.commit();
             response = CompletableFuture.supplyAsync(() -> "Success");
-        }
-        catch (HibernateException e) {
+        } catch (HibernateException e) {
             if (tx != null) {
                 tx.rollback();
             }
-            response = CompletableFuture.supplyAsync(() ->"Failure");
+            response = CompletableFuture.supplyAsync(() -> "Failure");
             Logger.getLogger("con").info("Exception" + e.getMessage());
             e.printStackTrace(System.err);
             return response.get();
-        }
-        finally
-        {
-            while(!response.isDone())
-            {
+        } finally {
+            while (!response.isDone()) {
 
             }
             System.out.println(response.get());
@@ -52,18 +48,16 @@ public class FoodDAOImpl implements IFoodDAO {
     }
 
     @Override
-    public List<Object> GetFoodByBranchId(int id) throws ExecutionException, InterruptedException {
+    public List<Object> GetFoodByBranchAsync() throws ExecutionException, InterruptedException {
         session = SessionFactoryUtil.getInstance().getHibernateSessionFactory().openSession();
         CompletableFuture<List<Object>> response = new CompletableFuture<>();
         Transaction tx = null;
-        try{
+        try {
             tx = session.beginTransaction();
-            String sqlQuery = "FROM Food U WHERE U.branch.branchId = :ids";
+            String sqlQuery = "FROM Food F JOIN fetch F.branch ";
             Query q = session.createQuery(sqlQuery);
-            q.setParameter("ids",id);
-            response.get().add(CompletableFuture.supplyAsync(q::getResultList));
-        }
-        catch (HibernateException e) {
+            response = CompletableFuture.supplyAsync(q::getResultList);
+        } catch (HibernateException e) {
             if (tx != null) {
                 tx.rollback();
             }
@@ -71,11 +65,8 @@ public class FoodDAOImpl implements IFoodDAO {
             Logger.getLogger("con").info("Exception" + e.getMessage());
             e.printStackTrace(System.err);
             return response.get();
-        }
-        finally
-        {
-            while(!response.isDone())
-            {
+        } finally {
+            while (!response.isDone()) {
 
             }
             System.out.println(response.get());

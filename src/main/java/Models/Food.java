@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "foods")
+@Table(name = "food")
 public class Food implements Serializable {
     @Id
     @Column(name = "food_name")
