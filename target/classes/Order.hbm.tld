@@ -11,6 +11,11 @@
         <id name="username" type="string" column="user_name">
         </id>
         <property name="price" column="order_price" type="double"/>
-
+        <set name="foodSet" table="OrderFood" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="food_name" not-null="true"/>
+            </key>
+            <one-to-many class="Models.OrderFood"/>
+        </set>
     </class>
 </hibernate-mapping>

@@ -30,9 +30,6 @@ public class BranchDAOImpl implements IBranchDAO {
         try{
             tx = session.beginTransaction();
             session.save(branch);
-            for (Food f : branch.getFoodSet()){
-                session.save(f);
-            }
             tx.commit();
             response = CompletableFuture.supplyAsync(() -> "Success");
         }

@@ -4,8 +4,7 @@ package Models;
 import com.fasterxml.jackson.annotation.*;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+
 @JsonRootName(value="branch")
 public class Branch implements Serializable {
     @JsonProperty("branchId")
@@ -16,20 +15,18 @@ public class Branch implements Serializable {
     private String branchName;
     @JsonProperty("city")
     private String city;
-    @JsonProperty("foodSet")
-    private Set<Food> foodSet = new HashSet<Food>();
+
 
     @JsonCreator
     public Branch(@JsonProperty("branchId") int branchId,
                   @JsonProperty("theme") String theme,
                   @JsonProperty("branchName") String branchName,
-                  @JsonProperty("city") String city,
-                  @JsonProperty("foodSet") Set<Food> foodSet) {
+                  @JsonProperty("city") String city) {
         this.branchId = branchId;
         this.theme = theme;
         this.branchName = branchName;
         this.city = city;
-        this.foodSet = foodSet;
+
     }
     @JsonCreator
     public Branch() {
@@ -67,13 +64,6 @@ public class Branch implements Serializable {
         this.theme = theme;
     }
 
-    public Set<Food> getFoodSet() {
-        return foodSet;
-    }
-
-    public void setFoodSet(Set<Food> foodSet) {
-        this.foodSet = foodSet;
-    }
 
 
 }

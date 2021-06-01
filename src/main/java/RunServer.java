@@ -20,7 +20,7 @@ public class RunServer {
         IBranchDAO branchDAO = new BranchDAOImpl();
         DatabaseServer dbs = new DatabaseServer();
 
-       /* Branch branch = new Branch();
+        /*Branch branch = new Branch();
         branch.setBranchId(2);
         branch.setBranchName("test2");
         branch.setCity("horsens");

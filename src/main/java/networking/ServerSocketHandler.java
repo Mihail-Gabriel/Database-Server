@@ -88,12 +88,8 @@ public class ServerSocketHandler implements Runnable {
                         outToClient.write(gson.toJson(userLoggedin).getBytes());
                         break;
                     case BRANCHES_GET_REQUEST:
-
                         List<Branch> branches = branchDAO.GetAllBranches();
-
-
                         String j = gson.toJson(branches);
-                        //JsonArray jsonArray =
                         outToClient.write(j.getBytes());
                         break;
                     case BRANCH_GET_REQUEST:
