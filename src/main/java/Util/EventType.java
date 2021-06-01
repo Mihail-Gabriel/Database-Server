@@ -6,6 +6,7 @@ public enum EventType {
     LOGIN_REQUEST,
     BRANCH_CREATE_REQUEST,
     BRANCH_GET_REQUEST,
-    MENU_CREATE_REQUEST
+    BRANCHES_GET_REQUEST
     ;
+
 }

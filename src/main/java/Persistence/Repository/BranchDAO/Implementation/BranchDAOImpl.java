@@ -1,11 +1,14 @@
 package Persistence.Repository.BranchDAO.Implementation;
 
 import Models.Branch;
+import Models.Food;
 import Persistence.Repository.BranchDAO.IBranchDAO;
 import Persistence.SessionFactoryUtil;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.annotations.common.util.impl.Log;
+
 
 import javax.persistence.Query;
 import java.util.ArrayList;
@@ -13,6 +16,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
+
 
 public class BranchDAOImpl implements IBranchDAO {
 
@@ -26,7 +30,9 @@ public class BranchDAOImpl implements IBranchDAO {
         try{
             tx = session.beginTransaction();
             session.save(branch);
-            session.save(branch.getFoodSet());
+            for (Food f : branch.getFoodSet()){
+                session.save(f);
+            }
             tx.commit();
             response = CompletableFuture.supplyAsync(() -> "Success");
         }
@@ -89,9 +95,10 @@ public class BranchDAOImpl implements IBranchDAO {
         List<Branch> branchList = new ArrayList<Branch>();
         try{
             tx = session.beginTransaction();
-            String queryString = "FROM Branch";
-            Query q = session.createQuery(queryString);
+            String queryString = "FROM Branch ";
+            Query q = session.createQuery(queryString, Branch.class);
             branchList = (List<Branch>) q.getResultList();
+
         }
         catch (HibernateException e) {
             if (tx != null) {
@@ -102,7 +109,7 @@ public class BranchDAOImpl implements IBranchDAO {
         }
         finally
         {
-            session.close();
+            /*session.close();*/
         }
 
         return branchList;
@@ -116,7 +123,7 @@ public class BranchDAOImpl implements IBranchDAO {
         try{
             tx = session.beginTransaction();
             String queryString = "From Branch U Where U.branchId = id";
-            Branch branch = new Branch();
+            Branch branch;
             branch = (Branch) session.createQuery(queryString).getSingleResult();
             session.delete(branch);
             response = CompletableFuture.supplyAsync(() ->"Success");

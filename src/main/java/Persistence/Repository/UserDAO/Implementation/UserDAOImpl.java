@@ -7,6 +7,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import javax.persistence.Query;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
@@ -55,14 +56,17 @@ public class UserDAOImpl implements IUserDAO {
     }
 
     @Override
-    public Object ValidateUserAsync(String username, String password) throws ExecutionException, InterruptedException {
+    public Object ValidateUserAsync(String usr, String pass) throws ExecutionException, InterruptedException {
             session = SessionFactoryUtil.getInstance().getHibernateSessionFactory().openSession();
             CompletableFuture<Object> response = new CompletableFuture<>();
             Transaction tx = null;
             try{
                 tx= session.beginTransaction();
-                String queryString = "FROM Users U Where U.username= username and U.password = password ";
-                response = CompletableFuture.supplyAsync(() -> session.createQuery(queryString).getSingleResult());
+                String queryString = "FROM Users as U Where U.username= :usrn and U.password = :passw ";
+                Query query = session.createQuery(queryString);
+                query.setParameter("usrn",usr);
+                query.setParameter("passw",pass);
+                response = CompletableFuture.supplyAsync(()-> query.getSingleResult());
             } catch (HibernateException e) {
                 if (tx != null) {
                     tx.rollback();
@@ -79,7 +83,7 @@ public class UserDAOImpl implements IUserDAO {
                 {
 
                 }
-                System.out.println(response.get());
+
                 session.close();
             }
         return response.get();

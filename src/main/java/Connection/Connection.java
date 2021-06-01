@@ -7,7 +7,7 @@ public abstract class Connection {
 
     private static final String url ="postgres://dumbo.db.elephantsql.com:5432/pibuxzdl ";
     private static final String user="pibuxzdl";
-    private static final String password="60uuBolgxnF1Fpyvvk6V3Xs-T06MerWp ";
+    private static final String password="gKOAyIxcWsPFE62vKEUlTXZ1IBpyHwYK ";
 
     public Connection()
     {
