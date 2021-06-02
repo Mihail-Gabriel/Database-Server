@@ -20,15 +20,14 @@ public class RunServer {
         IBranchDAO branchDAO = new BranchDAOImpl();
         DatabaseServer dbs = new DatabaseServer();
 
+        ///-----------
         /*Branch branch = new Branch();
-        branch.setBranchId(2);
-        branch.setBranchName("test2");
-        branch.setCity("horsens");
-        branch.setTheme("asian");
-        Food food = new Food("pasta",10,branch);
-        Set<Food> set = new HashSet<>();
-        set.add(food);
-        branch.setFoodSet(set);
+        branch.setBranchId(5);
+        branch.setBranchName("test4");
+        branch.setCity("aarhus");
+        branch.setTheme("spanish");
+        Food food = new Food("pizza",10,branch);
+
 
         try {
             branchDAO.AddBranchAsync(branch);
@@ -37,7 +36,7 @@ public class RunServer {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }*/
-
+        ///-------------
 
         try{
             dbs.startServer();

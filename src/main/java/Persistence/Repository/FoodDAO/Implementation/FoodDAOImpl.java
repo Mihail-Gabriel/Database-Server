@@ -8,6 +8,7 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import javax.persistence.Query;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -16,17 +17,15 @@ import java.util.logging.Logger;
 public class FoodDAOImpl implements IFoodDAO {
     private Session session;
     @Override
-    public String AddFoodAsync(List<Food> foods) throws ExecutionException, InterruptedException {
+    public String AddFoodAsync(Food food) throws ExecutionException, InterruptedException {
         session = SessionFactoryUtil.getInstance().getHibernateSessionFactory().openSession();
         CompletableFuture<String> response = new CompletableFuture<>();
         Transaction tx = null;
         try{
             tx = session.beginTransaction();
             System.out.println("before save");
-            for (Food f: foods)
-            {
-                session.save(f);
-            }
+            session.save(food);
+
             tx.commit();
             response = CompletableFuture.supplyAsync(() -> "Success");
         }
@@ -52,16 +51,17 @@ public class FoodDAOImpl implements IFoodDAO {
     }
 
     @Override
-    public List<Object> GetFoodByBranchId(int id) throws ExecutionException, InterruptedException {
+    public List<Object> GetFoodByBranchAsync() throws ExecutionException, InterruptedException {
         session = SessionFactoryUtil.getInstance().getHibernateSessionFactory().openSession();
         CompletableFuture<List<Object>> response = new CompletableFuture<>();
         Transaction tx = null;
         try{
             tx = session.beginTransaction();
-            String sqlQuery = "FROM Food U WHERE U.branch.branchId = :ids";
+
+            String sqlQuery = "FROM Food F JOIN fetch F.branch ";
+
             Query q = session.createQuery(sqlQuery);
-            q.setParameter("ids",id);
-            response.get().add(CompletableFuture.supplyAsync(q::getResultList));
+            response = CompletableFuture.supplyAsync(q::getResultList);
         }
         catch (HibernateException e) {
             if (tx != null) {

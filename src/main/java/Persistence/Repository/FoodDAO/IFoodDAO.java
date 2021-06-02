@@ -7,6 +7,6 @@ import java.util.concurrent.ExecutionException;
 
 public interface IFoodDAO {
 
-    String AddFoodAsync(List<Food> foods) throws ExecutionException, InterruptedException;
-    List<Object> GetFoodByBranchId(int id) throws ExecutionException, InterruptedException;
+    String AddFoodAsync(Food food) throws ExecutionException, InterruptedException;
+    List<Object> GetFoodByBranchAsync() throws ExecutionException, InterruptedException;
 }

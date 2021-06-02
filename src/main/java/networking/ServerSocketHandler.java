@@ -5,12 +5,15 @@ import Models.Food;
 import Models.Users;
 import Persistence.Repository.BranchDAO.IBranchDAO;
 import Persistence.Repository.BranchDAO.Implementation.BranchDAOImpl;
+import Persistence.Repository.FoodDAO.IFoodDAO;
+import Persistence.Repository.FoodDAO.Implementation.FoodDAOImpl;
 import Persistence.Repository.UserDAO.IUserDAO;
 import Persistence.Repository.UserDAO.Implementation.UserDAOImpl;
 import Util.Request;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.*;
 import java.net.Socket;
@@ -21,6 +24,7 @@ import java.util.concurrent.ExecutionException;
 public class ServerSocketHandler implements Runnable {
     private IUserDAO userDAO;
     private IBranchDAO branchDAO;
+    private IFoodDAO foodDAO;
     private Socket socket;
     private OutputStream outToClient;
     private InputStream inFromClient;
@@ -30,6 +34,7 @@ public class ServerSocketHandler implements Runnable {
         String jsonResponse = new String();
         userDAO = new UserDAOImpl();
         branchDAO = new BranchDAOImpl();
+        foodDAO = new FoodDAOImpl();
         this.socket = socket;
         try {
             outToClient = socket.getOutputStream();
@@ -97,10 +102,25 @@ public class ServerSocketHandler implements Runnable {
                         Object b = branchDAO.GetBranchAsync(id);
                         outToClient.write(gson.toJson(b).getBytes());
                         break;
+                    case BRANCH_REMOVE_REQUEST:
+                        int idBranch = gson.fromJson(objJson, int.class);
+                        Object removeBranchAsync = branchDAO.RemoveBranchAsync(idBranch);
+                        outToClient.write(gson.toJson(removeBranchAsync).getBytes());
+                        break;
                     case BRANCH_CREATE_REQUEST:
                         Branch branch = gson.fromJson(objJson,Branch.class);
                         String s = branchDAO.AddBranchAsync(branch);
                         outToClient.write(gson.toJson(s).getBytes());
+                        break;
+                    case FOOD_GET_REQUEST:
+                        List<Object> foods = foodDAO.GetFoodByBranchAsync();
+                        outToClient.write(gson.toJson(foods).getBytes());
+                        break;
+                    case FOOD_ADD_REQUEST:
+
+                        Food f = gson.fromJson(objJson,Food.class);
+                        String s1 = foodDAO.AddFoodAsync(f);
+                        outToClient.write(gson.toJson(s1).getBytes());
                         break;
 
 
