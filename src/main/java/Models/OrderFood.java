@@ -6,6 +6,9 @@ import java.io.Serializable;
 @Table(name = "orderfood")
 public class OrderFood implements Serializable {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name ="orderfood_id")
+    private int foodId;
     @Column(name ="food_name")
     private String foodName;
     @Column(name ="food_price")
@@ -36,6 +39,14 @@ public class OrderFood implements Serializable {
 
     public void setOrders(Orders orders) {
         this.orders = orders;
+    }
+
+    public int getFoodId() {
+        return foodId;
+    }
+
+    public void setFoodId(int foodId) {
+        this.foodId = foodId;
     }
 }
 
