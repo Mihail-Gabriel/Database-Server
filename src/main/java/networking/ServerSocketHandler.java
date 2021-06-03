@@ -1,23 +1,24 @@
 package networking;
 
-import Models.Branch;
-import Models.Food;
-import Models.Users;
+import Models.*;
 import Persistence.Repository.BranchDAO.IBranchDAO;
 import Persistence.Repository.BranchDAO.Implementation.BranchDAOImpl;
 import Persistence.Repository.FoodDAO.IFoodDAO;
 import Persistence.Repository.FoodDAO.Implementation.FoodDAOImpl;
+import Persistence.Repository.OrderDAO.IOrderDAO;
+import Persistence.Repository.OrderDAO.Implementation.OrderDAOImpl;
+import Persistence.Repository.OrderFoodDAO.IOrderFoodDAO;
+import Persistence.Repository.OrderFoodDAO.Implementation.OrderFoodDAOImpl;
 import Persistence.Repository.UserDAO.IUserDAO;
 import Persistence.Repository.UserDAO.Implementation.UserDAOImpl;
 import Util.Request;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.reflect.TypeToken;
 
+
+import javax.persistence.criteria.Order;
 import java.io.*;
 import java.net.Socket;
-import java.sql.SQLOutput;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -25,16 +26,20 @@ public class ServerSocketHandler implements Runnable {
     private IUserDAO userDAO;
     private IBranchDAO branchDAO;
     private IFoodDAO foodDAO;
+    private IOrderDAO orderDAO;
+    private IOrderFoodDAO orderFoodDAO;
     private Socket socket;
     private OutputStream outToClient;
     private InputStream inFromClient;
     private String jsonResponse;
 
     public ServerSocketHandler(Socket socket) {
-        String jsonResponse = new String();
+        String jsonResponse;
         userDAO = new UserDAOImpl();
         branchDAO = new BranchDAOImpl();
         foodDAO = new FoodDAOImpl();
+        orderDAO = new OrderDAOImpl();
+        orderFoodDAO = new OrderFoodDAOImpl();
         this.socket = socket;
         try {
             outToClient = socket.getOutputStream();
@@ -78,7 +83,7 @@ public class ServerSocketHandler implements Runnable {
                         String jsonResponse = "Message passing test";
 
                         outToClient.write(jsonResponse.getBytes());
-                        System.out.println("Sent to java server --> " + jsonResponse.toString());
+                        System.out.println("Sent to java server --> " + jsonResponse);
                         break;
                     case REGISTER_REQUEST:
                         Users userJs = gson.fromJson(objJson,Users.class);
@@ -117,21 +122,34 @@ public class ServerSocketHandler implements Runnable {
                         outToClient.write(gson.toJson(foods).getBytes());
                         break;
                     case FOOD_ADD_REQUEST:
-
                         Food f = gson.fromJson(objJson,Food.class);
                         String s1 = foodDAO.AddFoodAsync(f);
                         outToClient.write(gson.toJson(s1).getBytes());
+                        break;
+                    case ORDER_ADD_REQUEST:
+                        Orders o = gson.fromJson(objJson, Orders.class);
+                        String s2 = orderDAO.AddOrderAsync(o);
+                        outToClient.write(gson.toJson(s2).getBytes());
+                        break;
+                    case ORDER_GET_REQUEST:
+                        String s3 = gson.fromJson(objJson, String.class);
+                        Object o1 = orderDAO.GetOrderByUser(s3);
+                        outToClient.write(gson.toJson(o1).getBytes());
+                        break;
+                    case ORDERFOOD_ADD_REQUEST:
+                        OrderFood of = gson.fromJson(objJson, OrderFood.class);
+                        String s4 = orderFoodDAO.AddOrderFoodAsync(of);
+                        outToClient.write(gson.toJson(s4).getBytes());
+                    case ORDERFOOD_GET_REQUEST:
+                        List<Object> o2 = orderFoodDAO.GetOrderFoodByOrder();
+                        outToClient.write(gson.toJson(o2).getBytes());
                         break;
 
 
                 }
 
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (IOException | ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
     }

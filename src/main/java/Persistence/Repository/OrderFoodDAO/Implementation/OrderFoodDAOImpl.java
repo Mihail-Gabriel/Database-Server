@@ -18,16 +18,15 @@ import java.util.logging.Logger;
 public class OrderFoodDAOImpl implements IOrderFoodDAO {
     private Session session;
     @Override
-    public String AddOrderFoodAsync(List<OrderFood> foods) throws ExecutionException, InterruptedException {
+    public String AddOrderFoodAsync(OrderFood foods) throws ExecutionException, InterruptedException {
         session = SessionFactoryUtil.getInstance().getHibernateSessionFactory().openSession();
         CompletableFuture<String> response = new CompletableFuture<>();
         Transaction tx = null;
         try {
             tx = session.beginTransaction();
             System.out.println("before save");
-            for (OrderFood f : foods) {
-                session.save(f);
-            }
+            session.save(foods);
+
             tx.commit();
             response = CompletableFuture.supplyAsync(() -> "Success");
         } catch (HibernateException e) {
