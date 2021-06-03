@@ -3,11 +3,7 @@ package Models;
 import javax.persistence.*;
 import com.fasterxml.jackson.annotation.*;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "food")

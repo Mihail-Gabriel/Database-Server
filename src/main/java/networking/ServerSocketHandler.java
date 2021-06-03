@@ -16,31 +16,26 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 
 
-import javax.persistence.criteria.Order;
 import java.io.*;
 import java.net.Socket;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class ServerSocketHandler implements Runnable {
-    private IUserDAO userDAO;
-    private IBranchDAO branchDAO;
-    private IFoodDAO foodDAO;
-    private IOrderDAO orderDAO;
-    private IOrderFoodDAO orderFoodDAO;
-    private Socket socket;
+    private final IBranchDAO branchDAO;
+    private final IFoodDAO foodDAO;
+    private final IOrderDAO orderDAO;
+    private final IOrderFoodDAO orderFoodDAO;
     private OutputStream outToClient;
     private InputStream inFromClient;
-    private String jsonResponse;
 
     public ServerSocketHandler(Socket socket) {
         String jsonResponse;
-        userDAO = new UserDAOImpl();
+        IUserDAO userDAO = new UserDAOImpl();
         branchDAO = new BranchDAOImpl();
         foodDAO = new FoodDAOImpl();
         orderDAO = new OrderDAOImpl();
         orderFoodDAO = new OrderFoodDAOImpl();
-        this.socket = socket;
         try {
             outToClient = socket.getOutputStream();
             inFromClient = socket.getInputStream();
@@ -55,21 +50,22 @@ public class ServerSocketHandler implements Runnable {
             while (true) {
                 byte[] jsonByte = new byte[256];
                 int bytesRead;
+                String jsonResponse1;
                 do {
                     bytesRead = inFromClient.read(jsonByte);
 
-                    jsonResponse = new String(jsonByte, 0, bytesRead);
-                    System.out.println(jsonResponse);
+                    jsonResponse1 = new String(jsonByte, 0, bytesRead);
+                    System.out.println(jsonResponse1);
                 }
                 while (inFromClient.available() > 0);
 
 
                 Request request;
-                System.out.println("json response ...."+jsonResponse);
+                System.out.println("json response ...."+ jsonResponse1);
 
 
                 ObjectMapper objectMapper = new ObjectMapper();
-                request = objectMapper.readValue(jsonResponse, Request.class);
+                request = objectMapper.readValue(jsonResponse1, Request.class);
 
 
                 UserDAOImpl userDAO = new UserDAOImpl();

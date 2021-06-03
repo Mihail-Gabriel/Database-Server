@@ -1,13 +1,11 @@
 package Persistence.Repository.BranchDAO.Implementation;
 
 import Models.Branch;
-import Models.Food;
 import Persistence.Repository.BranchDAO.IBranchDAO;
 import Persistence.SessionFactoryUtil;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.hibernate.annotations.common.util.impl.Log;
 
 
 import javax.persistence.Query;
@@ -89,7 +87,7 @@ public class BranchDAOImpl implements IBranchDAO {
     public List<Branch> GetAllBranches() {
         session = SessionFactoryUtil.getInstance().getHibernateSessionFactory().openSession();
         Transaction tx = null;
-        List<Branch> branchList = new ArrayList<Branch>();
+        List<Branch> branchList = new ArrayList<>();
         try{
             tx = session.beginTransaction();
             String queryString = "FROM Branch";

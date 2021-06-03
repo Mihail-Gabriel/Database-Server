@@ -1,8 +1,5 @@
 package Persistence;
 
-import Models.Branch;
-import Models.Food;
-import Models.Users;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;

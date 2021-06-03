@@ -66,7 +66,7 @@ public class UserDAOImpl implements IUserDAO {
                 Query query = session.createQuery(queryString);
                 query.setParameter("usrn",usr);
                 query.setParameter("passw",pass);
-                response = CompletableFuture.supplyAsync(()-> query.getSingleResult());
+                response = CompletableFuture.supplyAsync(query::getSingleResult);
             } catch (HibernateException e) {
                 if (tx != null) {
                     tx.rollback();
