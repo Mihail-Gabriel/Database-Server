@@ -1,22 +1,21 @@
 package Models;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+@Entity
+@Table(name ="orders")
 public class Orders implements Serializable {
-
+    @Id
+    @Column(name = "user_name")
     private String username;
+    @Column(name = "order_price")
     private double price;
-    private Set<OrderFood> foodSet = new HashSet<OrderFood>();
-
-    public Set<OrderFood> getFoodSet() {
-        return foodSet;
-    }
-
-    public void setFoodSet(Set<OrderFood> foodSet) {
-        this.foodSet = foodSet;
-    }
 
     public String getUsername() {
         return username;
