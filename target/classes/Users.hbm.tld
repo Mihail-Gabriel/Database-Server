@@ -1,0 +1,19 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name = "Models.Users" table = "USERS">
+        <meta attribute="class-description">
+            This class contains the users of the website
+        </meta>
+        <id name="username" type="string" column="username">
+        </id>
+        <property name="password" column="password" type="string"/>
+        <property name="city" column="city" type="string"/>
+        <property name="address" column="address" type="string"/>
+        <property name="telephoneNo" column="telephoneno" type="string"/>
+        <property name="role" column="securitylevel" type="string"/>
+    </class>
+</hibernate-mapping>

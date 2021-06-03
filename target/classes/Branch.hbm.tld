@@ -1,0 +1,18 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name = "Models.Branch" table = "BRANCH">
+        <meta attribute="class-description">
+            This class contains the branches of the restaurant
+        </meta>
+        <id name="branchId" type="int" column="branch_id">
+        </id>
+        <property name="branchName" column="branch_name" type="string"/>
+        <property name="city" column="city_name" type="string"/>
+        <property name="theme" column="branch_theme" type="string"/>
+
+    </class>
+</hibernate-mapping>
