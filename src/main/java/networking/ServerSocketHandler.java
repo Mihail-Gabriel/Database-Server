@@ -24,6 +24,7 @@ import java.util.concurrent.ExecutionException;
 public class ServerSocketHandler implements Runnable {
     private final IBranchDAO branchDAO;
     private final IFoodDAO foodDAO;
+    private final UserDAOImpl userDAO;
     private final IOrderDAO orderDAO;
     private final IOrderFoodDAO orderFoodDAO;
     private OutputStream outToClient;
@@ -31,7 +32,7 @@ public class ServerSocketHandler implements Runnable {
 
     public ServerSocketHandler(Socket socket) {
         String jsonResponse;
-        IUserDAO userDAO = new UserDAOImpl();
+        userDAO = new UserDAOImpl();
         branchDAO = new BranchDAOImpl();
         foodDAO = new FoodDAOImpl();
         orderDAO = new OrderDAOImpl();
